@@ -1,11 +1,16 @@
-const hre = require("hardhat");
+const { ethers } = require("hardhat");
 
 async function main() {
-  const Logger = await hre.ethers.getContractFactory("AetherScopeLogger");
-  const logger = await Logger.deploy();
-  await logger.deployed();
+  const Logger = await ethers.getContractFactory("AetherScopeLogger");
 
-  console.log(`Contract deployed at: ${logger.address}`);
+  // Deploy the contract
+  const logger = await Logger.deploy();
+
+  // Wait for deployment to finish
+  await logger.waitForDeployment(); // ✅ This is the correct method for Hardhat/Ethers v6+
+
+  const deployedAddress = await logger.getAddress(); // Get the deployed address
+  console.log("✅ AetherScopeLogger deployed to:", deployedAddress);
 }
 
 main().catch((error) => {
